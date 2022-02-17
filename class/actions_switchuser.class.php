@@ -35,25 +35,22 @@ class ActionsSwitchuser
 	 */
 	function printTopRightMenuLoginDropdownBody($parameters, &$object, &$action, $hookmanager) {
 
-		global $dropdownBody, $langs;
+		global $langs, $user, $db;
 
 		$contexts = explode(':',$parameters['context']);
+		$form = new Form($db);
 
 		if(in_array('toprightmenu',$contexts)) {
-
-			$hookmanager->resPrint = '<span id="topmenumcmoreinfo-btn"><i class="fa fa-caret-right"></i> '.$langs->trans("Biduledemachin").'</span>';
-
-			//$dropdownBody = '';
-			//$dropdownBody.= '<span id="topmenumcmoreinfo-btn"><i class="fa fa-caret-right"></i> '.$langs->trans("ShowMoreInfos").'</span>';
-			//$dropdownBody.= '<div id="topmenumcmoreinfo" >';
-			//$dropdownBody.= '<br><u>'.$langs->trans("Entity").'</u>'."\n";
-			//$dropdownBody.= '<br><b>'.$langs->trans("Label").'</b>: '.$this->label."\n";
-			//$dropdownBody.= '<br><b>'.$langs->trans("Country").'</b>: '. ($imgCountry?$imgCountry.' ':'') . $country."\n";
-			//$dropdownBody.= '<br><b>'.$langs->trans("Currency").'</b>: '. currency_name($this->currency_code) . ' (' . $langs->getCurrencySymbol($this->currency_code) . ')'."\n";
-			//$dropdownBody.= '<br><b>'.$langs->trans("Language").'</b>: '. ($imgLang?$imgLang.' ':'') . ($this->language_code=='auto'?$langs->trans("AutoDetectLang"):$langs->trans("Language_".$this->language_code));
-			//if (! empty($this->description)) $dropdownBody.= '<br><b>'.$langs->trans("Description").'</b>: '.$this->description."\n";
-			//$dropdownBody.= '</div>';
-
+			if ($user->entity == 0) {
+				$hookmanager->resPrint = '<form action="?" name="f1">';
+				$hookmanager->resPrint.= '<fieldset>';
+				$hookmanager->resPrint.= '<legend>' . $langs->trans('SwitchUserSelect') . '</legend>';
+				$hookmanager->resPrint.= '<input type="hidden" name="action" value="switch"/>';
+				$hookmanager->resPrint.= $form->select_dolusers('', 'userid', 0, null, 0, '', '', '0', 0, 0, '', 0, '', '', 1);
+				$hookmanager->resPrint.= '<button class="button" type="submit" name="switch" value="Switch" >' . $langs->trans('SwitchUser') . '</button>';
+				$hookmanager->resPrint.= '</fieldset>';
+				$hookmanager->resPrint.= '</form>';
+			}
 		}
 
 		return 0;
